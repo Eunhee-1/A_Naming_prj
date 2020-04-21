@@ -1,0 +1,245 @@
+<!doctype html>
+
+
+    <html lang="en">
+    <head>
+    
+      <!-- Webpage Title -->
+      <title>Hello, world!</title>
+    
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+      <!-- JS -->   
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+      <!-- 구글폰트 -->
+      <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+    
+      <script>
+
+
+
+        $(document).ready(function () {
+            $('#cards-box').html('');
+            listing();
+        });
+
+
+// 동물조회하기//
+
+        function listing() {
+        $('#cards-box').empty();
+
+        $.ajax({
+            type: "GET",
+            url: "/animal",
+            data: {},
+            success: function (response) {
+                if (response['result'] == 'success') {
+
+                    // console.log(response['animal_list'])
+
+                    let showCards = response['animal_list']
+
+                    for (let i=0; i<showCards.length; i++){
+
+                      let showCard =showCards[i];
+                      let title = showCard['title'];
+                      let infom = showCard['infom'];
+
+                      make_card(title,infom);
+                      
+                    }
+                } else {
+                    alert('동물 조회에 실패했습니다.');
+                }
+            }
+        })
+    }
+
+        function make_card(title, infom) {
+            let temp_html = 
+                            // '<tr>\
+                            //     <td>'+ title + '</td>\
+                            //     <td>'+ infom + '</td>\
+                            // </tr>';
+
+                            '<div class="card">\
+        <img class="card-img-top" src="'+ image + '" alt="Card image cap">\
+        <div class="card-body">\
+          <a href="'+ url + '" class="card-title">' + title + '</a>\
+          <p class="card-text">'+ desc + '</p>\
+          <p class="card-text comment">'+ comment + '</p>\
+        </div>\
+      </div>';
+            $('#cards-box').append(temp_html);
+        }
+
+
+        
+
+      </script>
+    
+      <!-- style -->
+      <style typez="text/css">
+        * {
+          font-family: 'Stylish', sans-serif;
+        }
+        .wrap {
+          width: 900px;
+          margin: auto;
+        }
+        .comment {
+          color: blue;
+          font-weight: bold;
+        }
+        .form-post {
+          max-width: 500px;
+          padding: 2rem;
+          margin: 2rem auto;
+          border-color: #e9ecef;
+          border-radius: 0.3rem;
+          border: solid;
+          display: block;
+        }
+        #posting-box {
+          display: none;
+        }
+
+        .test_class{
+            max-width: 100%;
+            max-height: 100%;
+            overflow: hidden;
+        }
+
+
+        body, html {margin: 0; padding: 0; height: 100%;}
+
+        /* 메뉴바 */
+        header{
+         height: 75px; background-color:#197688; border: 1px solid #253342;
+         position: fixed; width:100%; z-index:9999; top: 0; left: 0;
+        }
+        .wrapper{width: 1170px; margin: 0 auto;}
+        .wrapper h1{color: white; line-height: 75px; float: left;}
+        .menu{float: right;}
+        .menu li{float: left; display: block;}
+        .menu li a{line-height: 75px; color: white; padding: 0 15px; display: block;}
+       
+       
+       /* 메인페이지 */
+        .main{
+            min-width: 100%;
+            min-height: 100%;
+
+           }
+        .background_img{
+          
+           border: 0;
+           padding: 0; 
+           background-position: center;
+           background-size: cover;
+           }
+
+
+      </style>
+    
+    </head>
+    <body>
+        
+        <header>
+          <div class="wrapper">
+            <h1>LOGO</h1>
+            <nav>
+              <ul class="menu">
+                <li><a href="#">Home</a></li>
+                <li><a href="">동물 조회</a></li>
+                <li><a href="">이름 짓기</a></li>
+              </ul>
+            </nav>
+          </div>
+        </header>
+
+
+            <div class =" main">
+            
+                <div style="position: absolute;">
+            
+                  <img src="C:\Users\girl\Desktop\sparta\myproject\animalproject\templates\img\main_text.png"></img>
+            
+                </div>
+            
+                <img src="C:\Users\girl\Desktop\sparta\myproject\animalproject\templates\img\main.png"class = "background_img"></img>
+            
+            </div>
+
+
+<section>
+      <div class="wrap">
+        
+        <div class="menu_1">
+          <h1 style="text-align: center;">동물 조회</h1>
+          <hr>
+  
+        </div>
+        <div class="card-columns"  id="cards-box">
+          <div class="card">
+            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
+            <div class="card-body">
+              <a href="#" class="card-title">여기 기사 제목이 들어가죠</a>
+              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
+              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
+              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
+              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
+              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
+              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    </body>
+    </html>
