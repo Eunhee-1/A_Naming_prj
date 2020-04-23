@@ -1,6 +1,7 @@
 <!doctype html>
 
 
+
     <html lang="en">
     <head>
     
@@ -19,6 +20,9 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
+       <!-- JQuery를 import 합니다 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
       <!-- 구글폰트 -->
       <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
     
@@ -31,6 +35,52 @@
             listing();
         });
 
+// 이름짓기//
+
+        // function naming(){
+        //   let ID = $('#ID').val();
+        //   let newName = $('#newName').val();
+        //   let mean = $('#mean').val();
+        //   let like = 1;
+
+
+        //   $.ajax({
+        //     type: "POST",
+        //     url: "/naming_ko",
+        //     data: {ID = ID , newName = newName, mean = mean},
+        //     success: function (response) {
+        //       if (response['result'] == 'success'){
+        //         alert(response['msg']);
+        //         $('#ID').val('');
+        //         $('#newName').val('');
+        //         $('#mean').val('');
+        //         window.location.reload();
+        //       }
+        //     }
+
+        //     //좋아요 추가하기
+        //   });
+        // }
+
+//이름 없는 동물 랜덤//
+        function random_A(){
+        $('#cards-box').empty();
+        $.ajax({
+          type: "GET",
+          url: "/animal_ko",
+          data: {},
+          success: function (response) {
+            if (response['result'] == 'success') {
+
+            console.log(response['NoName_A'])
+
+            
+
+            }
+          }
+        });
+        }
+
 
 // 동물조회하기//
 
@@ -39,24 +89,24 @@
 
         $.ajax({
             type: "GET",
-            url: "/animal",
+            url: "/animal_ko",
             data: {},
             success: function (response) {
                 if (response['result'] == 'success') {
 
-                    // console.log(response['animal_list'])
+                    console.log(response['animal_list'])
 
-                    let showCards = response['animal_list']
+                    // let showCards = response['animal_list']
 
-                    for (let i=0; i<showCards.length; i++){
+                    // for (let i=0; i<showCards.length; i++){
 
-                      let showCard =showCards[i];
-                      let title = showCard['title'];
-                      let infom = showCard['infom'];
+                     
 
-                      make_card(title,infom);
+                    //   make_card(animal_list[i]['image'],animal_list[i]['url'],animal_list[i]['이름'],
+                    //   animal_list[i]['공고번호'],animal_list[i]['접수일자'],animal_list[i]['품종'],animal_list[i]['성별'],
+                    //   animal_list[i]['발견장소'],animal_list[i]['특징'],animal_list[i]['상태']);
                       
-                    }
+                    // }
                 } else {
                     alert('동물 조회에 실패했습니다.');
                 }
@@ -64,24 +114,26 @@
         })
     }
 
-        function make_card(title, infom) {
+        function make_card(image, url, 이름, 공고번호, 접수일자, 품종, 성별, 발견장소, 특징, 상태,) {
             let temp_html = 
-                            // '<tr>\
-                            //     <td>'+ title + '</td>\
-                            //     <td>'+ infom + '</td>\
-                            // </tr>';
 
                             '<div class="card">\
         <img class="card-img-top" src="'+ image + '" alt="Card image cap">\
         <div class="card-body">\
-          <a href="'+ url + '" class="card-title">' + title + '</a>\
-          <p class="card-text">'+ desc + '</p>\
-          <p class="card-text comment">'+ comment + '</p>\
+          <a href="'+ url + '" class="name">' + 이름 + '</a>\
+          <p class="number">'+ 공고번호 + '</p>\
+             <p class="day">'+ 접수일자 + '</p>\
+             <p class="kind">'+ 품종 + '</p>\
+             <p class="gender">'+ 성별 + '</p>\
+             <p class="find">'+ 발견장소 + '</p>\
+             <p class="character">'+ 특징 + '</p>\
+          <p class="care">'+ 상태 + '</p>\
         </div>\
       </div>';
             $('#cards-box').append(temp_html);
         }
 
+  
 
         
 
@@ -187,55 +239,86 @@
         <div class="menu_1">
           <h1 style="text-align: center;">동물 조회</h1>
           <hr>
+          <button onclick="naming()" class="btn btn-primary">기사저장</button>
   
         </div>
         <div class="card-columns"  id="cards-box">
           <div class="card">
             <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
             <div class="card-body">
-              <a href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+              <a href="#" class="name">이름</a>
+              <p class="number">공고번호</p>
+              <p class="day">접수일자 </p>
+              <p class="kind">품종</p>
+              <p class="gender">성별</p>
+              <p class="find">발견장소</p>
+              <p class="character">특징</p>
+              <p class="care">상태</p>
             </div>
           </div>
           <div class="card">
             <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
             <div class="card-body">
-              <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
-              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+              <h5 class="name">이름</h5>
+              <p class="number">공고번호</p>
+              <p class="day">접수일자 </p>
+              <p class="kind">품종</p>
+              <p class="gender">성별</p>
+              <p class="find">발견장소</p>
+              <p class="character">특징</p>
+              <p class="care">상태</p>
             </div>
           </div>
           <div class="card">
             <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
             <div class="card-body">
-              <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
-              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+              <h5 class="name">이름</h5>
+              <p class="number">공고번호</p>
+              <p class="day">접수일자 </p>
+              <p class="kind">품종</p>
+              <p class="gender">성별</p>
+              <p class="find">발견장소</p>
+              <p class="character">특징</p>
+              <p class="care">상태</p>
             </div>
           </div>
           <div class="card">
             <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
             <div class="card-body">
-              <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
-              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+              <h5 class="name">이름</h5>
+              <p class="number">공고번호</p>
+              <p class="day">접수일자 </p>
+              <p class="kind">품종</p>
+              <p class="gender">성별</p>
+              <p class="find">발견장소</p>
+              <p class="character">특징</p>
+              <p class="care">상태</p>
             </div>
           </div>
           <div class="card">
             <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
             <div class="card-body">
-              <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
-              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+              <h5 class="name">이름</h5>
+              <p class="number">공고번호</p>
+              <p class="day">접수일자 </p>
+              <p class="kind">품종</p>
+              <p class="gender">성별</p>
+              <p class="find">발견장소</p>
+              <p class="character">특징</p>
+              <p class="care">상태</p>
             </div>
           </div>
           <div class="card">
             <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
             <div class="card-body">
-              <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
-              <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-              <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+              <h5 class="name">이름</h5>
+              <p class="number">공고번호</p>
+              <p class="day">접수일자 </p>
+              <p class="kind">품종</p>
+              <p class="gender">성별</p>
+              <p class="find">발견장소</p>
+              <p class="character">특징</p>
+              <p class="care">상태</p>
             </div>
           </div>
         </div>

@@ -29,22 +29,22 @@ for info in information:
     # img = info.find('img').attrs('image-src')
 
     # print(img['src'])
+    doc = {}
+    name = '새 이름을 지어주세요 '
+    is_insert = False
     for inf in info_list:
-        a_tag = inf.select_one('dt')
-        a_info = inf.select_one('dd')
+        title = inf.select_one('dt')
+        desc = inf.select_one('dd')
 
-        if a_tag is not None:
-            title = a_tag.text
-            infom = a_info.text
+        if title is not None:
+            is_insert = True
 
-            doc = {
-                # 'img': img_url,
-                'title': title,
-                'infom': infom
-            }
-            db.animal.insert_one(doc)
+            doc['이름'] = name
+            doc[title.text] = desc.text
+
+    if is_insert:
+        db.animal_ko.insert_one(doc)
 
 # all_animal =list(db.animal.find())
 # for animal in all_animal:
 #      print(animal)
-
