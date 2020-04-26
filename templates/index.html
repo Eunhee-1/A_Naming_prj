@@ -28,61 +28,169 @@
     
       <script>
 
-
-
-        $(document).ready(function () {
-            $('#cards-box').html('');
-            listing();
-        });
+window.onload=random_A();
+window.onload=name_listing();
+ 
 
 // 이름짓기//
 
-        // function naming(){
-        //   let ID = $('#ID').val();
-        //   let newName = $('#newName').val();
-        //   let mean = $('#mean').val();
-        //   let like = 1;
+        function naming(){
+          let ID = $('#ID').val();
+          let newName = $('#newName').val();
+          let mean = $('#mean').val();
+          let num = $('#num').val();
+          
+
+          if (ID == '') {
+                alert('닉네임을 입력해주세요');
+                $('#ID').focus();
+                return;
+            } else if (newName == '') {
+                alert('이름을 지어주세요');
+                $('#newName').focus();
+                return;
+            } else if (mean == '') {
+                alert('이름에 대해 설명해주세요');
+                $('#mean').focus();
+                return;
+            }
 
 
-        //   $.ajax({
-        //     type: "POST",
-        //     url: "/naming_ko",
-        //     data: {ID = ID , newName = newName, mean = mean},
-        //     success: function (response) {
-        //       if (response['result'] == 'success'){
-        //         alert(response['msg']);
-        //         $('#ID').val('');
-        //         $('#newName').val('');
-        //         $('#mean').val('');
-        //         window.location.reload();
-        //       }
-        //     }
+          $.ajax({
+            type: "POST",
+            url: "/naming",
+            data: {'num_give' : num,'ID_give' : ID , 'newName_give' : newName, 'mean_give' : mean },
+            success: function (response) {
+              if (response['result'] == 'success'){
+                
+                alert(response['msg']);
+                $('#num').val('');
+                $('#ID').val('');
+                $('#newName').val('');
+                $('#mean').val('');
+                name_listing();
+                // window.location.reload();
+              }
+            }
+          });
+        }
 
-        //     //좋아요 추가하기
-        //   });
-        // }
+        $(document).ready(function () {
+            $('#orders-box').html('');
+            // name_listing();
+        });
+        
+        function name_listing() {
+          //alert('name_listing');
+          $('#orders-box').empty();
+            $.ajax({
+                type: "GET",
+                url: "/naming_list",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        let naming_list = response['naming_list'];
+                        // console.log(naming_list);
+                        let num2 = $('#num2').val();
+
+                        for (let i = 0; i < naming_list.length; i++) {
+                          // console.log(naming_list[i]['공고번호']);
+                         if(naming_list[i]['공고번호'] ==  $('#num2').val()) {
+                          list_card(naming_list[i]['ID'], naming_list[i]['newName'], naming_list[i]['mean'], naming_list[i]['like']);
+                          }
+                        }
+
+                    } else {
+                        alert('리뷰를 받아오지 못했습니다');
+                    }
+                }
+            })
+        }
+
+        function list_card(ID, newName, mean,like) {
+          var id = "'"+ID+"'";
+            let temp_html = '<tr>\
+                                <td>'+ ID + '</td>\
+                                <td>'+ newName + '</td>\
+                                <td>'+ mean + '</td>\
+                                <td>'+ like + '</td>\
+                                <td>'+'<input type="button" onclick="like('+id+')" value="좋아요"/>'+ '</td>\
+                            </tr>';
+            $('#orders-box').append(temp_html);
+        }
+
 
 //이름 없는 동물 랜덤//
+
         function random_A(){
-        $('#cards-box').empty();
+        $('#cards-box2').empty();
         $.ajax({
           type: "GET",
-          url: "/animal_ko",
+          url: "/need_naming",
           data: {},
           success: function (response) {
             if (response['result'] == 'success') {
 
-            console.log(response['NoName_A'])
 
+           
+            let random_A = response['NoName_A']
+
+            random_card(random_A['img_url'],random_A['이름'],
+            random_A['공고번호'],random_A['접수일자'],random_A['품종'],random_A['성별'],
+            random_A['발견장소'],random_A['특징'],random_A['상태']);
             
-
-            }
+            $('#num2').val(random_A['공고번호']);
+            } else {
+                    alert('동물 조회에 실패했습니다.');
+                }
           }
         });
         }
+                   
 
+        function random_card(img_url, 이름, 공고번호, 접수일자, 품종, 성별, 발견장소, 특징, 상태,) {
+            let R_temp_html = '<div class="card" id="cards-box2" ><img class="card-img-top" src="'+ img_url + '" alt="Card image cap">\
+        <div class="card-body">\
+          <a href="' +  + '" class="name">' + 이름 + '</a>\
+          <p class="number"> '+ '공고번호&nbsp&nbsp : &nbsp' + 공고번호 + '</p>\
+             <p class="day"> '+ '접수일자&nbsp&nbsp : &nbsp'+ 접수일자 + '</p>\
+             <p class="kind"> '+ '&nbsp&nbsp품종&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 품종 + '</p>\
+             <p class="gender"> '+ '&nbsp&nbsp성별&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 성별 + '</p>\
+             <p class="find"> '+ '발견장소&nbsp&nbsp : &nbsp'+ 발견장소 + '</p>\
+             <p class="character"> '+ '&nbsp&nbsp특징&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 특징 + '</p>\
+          <p class="care"> '+ '&nbsp&nbsp상태&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 상태 + '</p>\
+      </div></div>';
+            $('#random_card').append(R_temp_html);
+        }
+
+//좋아요//
+function like(IDval){
+  console.log("like()");
+  
+  let ID = IDval;
+  console.log(ID);
+    $.ajax({
+      type: "POST",
+      url: "/like",
+      data: { 'ID_give': ID},
+      success: function (response) {
+        if (response['result'] == 'success') {
+
+          alert(response['msg']);
+          
+          // window.location.reload();
+        }
+      }
+          });
+
+}
 
 // 동물조회하기//
+
+$(document).ready(function () {
+      $('#cards-box').html('');
+      listing();
+    });
 
         function listing() {
         $('#cards-box').empty();
@@ -94,19 +202,17 @@
             success: function (response) {
                 if (response['result'] == 'success') {
 
-                    console.log(response['animal_list'])
+                  //  console.log(response['animal_list'])
 
-                    // let showCards = response['animal_list']
+                    let showCards = response['animal_list']
 
-                    // for (let i=0; i<showCards.length; i++){
+                    for (let i=0; i<6; i++){
 
-                     
-
-                    //   make_card(animal_list[i]['image'],animal_list[i]['url'],animal_list[i]['이름'],
-                    //   animal_list[i]['공고번호'],animal_list[i]['접수일자'],animal_list[i]['품종'],animal_list[i]['성별'],
-                    //   animal_list[i]['발견장소'],animal_list[i]['특징'],animal_list[i]['상태']);
-                      
-                    // }
+                      // console.log(showCards)
+                      make_card(showCards[i]['img_url'],showCards[i]['이름'],
+                      showCards[i]['공고번호'],showCards[i]['접수일자'],showCards[i]['품종'],showCards[i]['성별'],
+                      showCards[i]['발견장소'],showCards[i]['특징'],showCards[i]['상태']);
+                    }
                 } else {
                     alert('동물 조회에 실패했습니다.');
                 }
@@ -114,28 +220,22 @@
         })
     }
 
-        function make_card(image, url, 이름, 공고번호, 접수일자, 품종, 성별, 발견장소, 특징, 상태,) {
-            let temp_html = 
-
-                            '<div class="card">\
-        <img class="card-img-top" src="'+ image + '" alt="Card image cap">\
+        function make_card(img_url, 이름, 공고번호, 접수일자, 품종, 성별, 발견장소, 특징, 상태,) {
+            let temp_html = '<div class="card">\
+        <img class="card-img-top" src="'+ img_url + '" alt="Card image cap">\
         <div class="card-body">\
-          <a href="'+ url + '" class="name">' + 이름 + '</a>\
-          <p class="number">'+ 공고번호 + '</p>\
-             <p class="day">'+ 접수일자 + '</p>\
-             <p class="kind">'+ 품종 + '</p>\
-             <p class="gender">'+ 성별 + '</p>\
-             <p class="find">'+ 발견장소 + '</p>\
-             <p class="character">'+ 특징 + '</p>\
-          <p class="care">'+ 상태 + '</p>\
+          <a href="' +  + '" class="name">' + 이름 + '</a>\
+          <p class="number"> '+ '공고번호&nbsp&nbsp : &nbsp' + 공고번호 + '</p>\
+             <p class="day"> '+ '접수일자&nbsp&nbsp : &nbsp'+ 접수일자 + '</p>\
+             <p class="kind"> '+ '&nbsp&nbsp품종&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 품종 + '</p>\
+             <p class="gender"> '+ '&nbsp&nbsp성별&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 성별 + '</p>\
+             <p class="find"> '+ '발견장소&nbsp&nbsp : &nbsp'+ 발견장소 + '</p>\
+             <p class="character"> '+ '&nbsp&nbsp특징&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 특징 + '</p>\
+          <p class="care"> '+ '&nbsp&nbsp상태&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 상태 + '</p>\
         </div>\
       </div>';
             $('#cards-box').append(temp_html);
         }
-
-  
-
-        
 
       </script>
     
@@ -144,16 +244,10 @@
         * {
           font-family: 'Stylish', sans-serif;
         }
-        .wrap {
-          width: 900px;
-          margin: auto;
-        }
-        .comment {
-          color: blue;
-          font-weight: bold;
-        }
+        
         .form-post {
           max-width: 500px;
+          /* max-height: 500px; */
           padding: 2rem;
           margin: 2rem auto;
           border-color: #e9ecef;
@@ -161,9 +255,9 @@
           border: solid;
           display: block;
         }
-        #posting-box {
+        /* #cards-box {
           display: none;
-        }
+        } */
 
         .test_class{
             max-width: 100%;
@@ -190,15 +284,46 @@
         .main{
             min-width: 100%;
             min-height: 100%;
-
            }
+           
         .background_img{
-          
            border: 0;
            padding: 0; 
            background-position: center;
            background-size: cover;
            }
+
+       .wrap {
+          width: 900px;
+          margin: auto;
+        }
+        .wrap2 {
+          width: 1200px;
+          margin: auto;
+        }
+        
+        #random_card{
+          width: 1200px;
+          display: inline-block;
+          margin: auto;
+        }
+
+        .freename_list{
+          width: 700px;
+          display: inline-block;
+          padding-left: 100px;
+          margin: auto;
+          border-color: #e9ecef;
+          border-radius: 0.3rem;
+          text-align: center;
+
+
+        }
+        #cards-box2{
+          float: left;
+          width: 400px;
+          display: inline-block;
+        }
 
 
       </style>
@@ -221,26 +346,20 @@
 
 
             <div class =" main">
-            
                 <div style="position: absolute;">
-            
                   <img src="C:\Users\girl\Desktop\sparta\animalproject\templates\img\main_text.png"></img>
-            
                 </div>
-            
                 <img src="C:\Users\girl\Desktop\sparta\animalproject\templates\img\main.png"class = "background_img"></img>
             
             </div>
 
 
-<section>
+    <section>
       <div class="wrap">
-        
         <div class="menu_1">
           <h1 style="text-align: center;">동물 조회</h1>
           <hr>
-          <button onclick="naming()" class="btn btn-primary">기사저장</button>
-  
+          
         </div>
         <div class="card-columns"  id="cards-box">
           <div class="card">
@@ -323,6 +442,78 @@
           </div>
         </div>
       </div>
+    </section>
+    <section>
+  <hr><hr><hr><hr>
+   
+  <div class="wrap2">
+    <button onclick="random_A()" class="btn btn-primary">랜덤 테스트</button>
+    <div id="random_card">
+    <h1>아이의 이름을 지어주세요</h1>    
+    <div class="freename_list" > 
+      <input type="hidden" id="num2" value=""/>
+      
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th class="meta_info" scope="col">닉네임</th>
+                    <th class="meta_info" scope="col">이름</th>
+                    <th scope="col">이름 설명</th>
+                    <th class="meta_info" scope="col">좋아요</th>
+                    <th class="meta_info"></th>
+                </tr>
+            </thead>
+            <tbody id="orders-box">   
+                <tr>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                </tr>
+            </tbody>
+        </table>
+    
+      </div>
+    </div>
+  </div>
+      <div class='form-post'>
+            <div class="info">
+                <p>아이가 좋은 이름을 갖고 입양될 수 있도록 센스를 보여주세요!</p>
+            </div>
+            <div class="info">
+              
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">공고번호</span>
+                </div>
+                <input type="text" class="form-control" id="num" aria-describedby="basic-addon3" readonly>
+            </div>  
+              <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">닉네임</span>
+                    </div>
+                    <input type="text" class="form-control" id="ID" aria-describedby="basic-addon3">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">이름</span>
+                    </div>
+                    <input type="text" class="form-control" id="newName" aria-describedby="basic-addon3">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">이름 설명</span>
+                    </div>
+                    <textarea class="form-control" aria-describedby="basic-addon3" name="bookReview" id="mean" cols="30"
+                        rows="5" placeholder="140자까지 입력할 수 있습니다." maxlength="50">
+                    </textarea>
+                </div>
+                <div class="order">
+                  <button onclick="naming()" class="btn btn-primary">!이름짓기완료!</button>
+                </div>
+            </div>
+          </div>
+
     </section>
     </body>
     </html>

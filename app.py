@@ -10,7 +10,7 @@ db = client.dbanimal_list
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-data = requests.get('https://www.animal.go.kr/front/awtis/protection/protectionList.do?totalCount=6293&pageSize=10&menuNo=1000000060&&page=1', headers=headers)
+data = requests.get('https://www.animal.go.kr/front/awtis/protection/protectionList.do?totalCount=6293&pageSize=10&menuNo=1000000060&&page=2', headers=headers)
 
 
 soup = BeautifulSoup(data.text, 'html.parser')
@@ -22,14 +22,14 @@ for info in information:
     info_img = info.select('div.photo > div > a ')
     info_list =info.select('div.txt > dl ')
 
-    img = info.select_one('div.photo > div.thumbnail > a > img')
+    img = info.select_one('div.photo > div > a')
 
-    # img_url = img['src']
-    #
-    # img = info.find('img').attrs('image-src')
+    if img is None:
+        continue
+    img_href = 'https://www.animal.go.kr/' + img['href']
 
-    # print(img['src'])
     doc = {}
+    doc['img_url'] = img_href
     name = '새 이름을 지어주세요 '
     is_insert = False
     for inf in info_list:
