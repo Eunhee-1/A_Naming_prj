@@ -5,6 +5,7 @@ app = Flask(__name__)
 from pymongo import MongoClient
 
 
+# client = MongoClient('mongodb://test:test@localhost', 27017)
 client = MongoClient('localhost', 27017)
 db = client.dbanimal_list
 
@@ -24,7 +25,7 @@ def need_naming():
     NoName_A = random.choice(NoNames)
 
     # 공고번호만 db.naming_ko 에 넣어주기
-    randomNum = NoName_A['공고번호']
+    # randomNum = NoName_A['공고번호']
     # doc={}
     # doc['공고번호'] = randomNum
     # db.naming_ko.insert_one(doc)
@@ -57,7 +58,8 @@ def A_naming():
 # # 이름 후보 조회
 @app.route('/naming_list', methods=['GET'])
 def naming_list():
-    naming_list = list(db.naming_ko.find({},{'_id':0}))
+    naming_list = list(db.naming_ko.find({}, {'_id': False}).sort('like', -1))
+
     return jsonify({'result': 'success', 'naming_list': naming_list})
 
 # 동물 조회
@@ -71,13 +73,12 @@ def read_animal_list():
 def like():
     ID_receive = request.form['ID_give']
 
-    IDname = list(db.naming_ko.find({'ID': ID_receive},{'_id': False}))
-    like = IDname.findone({'like':''})
+    IDname = db.naming_ko.find_one({'ID': ID_receive})
+    like = IDname['like'] + 1
+    db.naming_ko.update_one({'ID': ID_receive}, {'$set': {'like': like}})
 
-    print(like)
-
-
-    return jsonify({'result': 'success', 'msg': like})
+    return jsonify({'result': 'success', 'msg': '이름 추천 성공!'})
 
 if __name__ == '__main__':
+    # app.run('0.0.0.0', port=5000, debug=True)
     app.run('localhost', port=5000, debug=True)

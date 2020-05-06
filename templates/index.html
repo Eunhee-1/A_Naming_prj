@@ -2,518 +2,627 @@
 
 
 
-    <html lang="en">
-    <head>
-    
-      <!-- Webpage Title -->
-      <title>Hello, world!</title>
-    
-      <!-- Required meta tags -->
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-      <!-- Bootstrap CSS -->
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    
-      <!-- JS -->   
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
-       <!-- JQuery를 import 합니다 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    
-      <!-- 구글폰트 -->
-      <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
-    
-      <script>
+<html lang="en">
 
-window.onload=random_A();
-window.onload=name_listing();
- 
+<head>
 
-// 이름짓기//
+  <!-- Webpage Title -->
+  <title>Hello, world!</title>
 
-        function naming(){
-          let ID = $('#ID').val();
-          let newName = $('#newName').val();
-          let mean = $('#mean').val();
-          let num = $('#num').val();
-          
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-          if (ID == '') {
-                alert('닉네임을 입력해주세요');
-                $('#ID').focus();
-                return;
-            } else if (newName == '') {
-                alert('이름을 지어주세요');
-                $('#newName').focus();
-                return;
-            } else if (mean == '') {
-                alert('이름에 대해 설명해주세요');
-                $('#mean').focus();
-                return;
-            }
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <!-- JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <!-- JQuery를 import 합니다 -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- 구글폰트 -->
+  <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+
+  <script>
+
+    window.onload = random_A();
+    window.onload = name_listing();
+    
 
 
-          $.ajax({
-            type: "POST",
-            url: "/naming",
-            data: {'num_give' : num,'ID_give' : ID , 'newName_give' : newName, 'mean_give' : mean },
-            success: function (response) {
-              if (response['result'] == 'success'){
-                
-                alert(response['msg']);
-                $('#num').val('');
-                $('#ID').val('');
-                $('#newName').val('');
-                $('#mean').val('');
-                name_listing();
-                // window.location.reload();
+    // 이름짓기//
+    function nameform(){
+      
+      $('.post-box').show();
+    }
+
+    function naming() {
+      let ID = $('#ID').val();
+      let newName = $('#newName').val();
+      let mean = $('#mean').val();
+      let num = $('#num').val();
+
+
+      if (ID == '') {
+        alert('닉네임을 입력해주세요');
+        $('#ID').focus();
+        return;
+      } else if (newName == '') {
+        alert('이름을 지어주세요');
+        $('#newName').focus();
+        return;
+      } else if (mean == '') {
+        alert('이름에 대해 설명해주세요');
+        $('#mean').focus();
+        return;
+      }
+
+
+      $.ajax({
+        type: "POST",
+        url: "/naming",
+        data: { 'num_give': num, 'ID_give': ID, 'newName_give': newName, 'mean_give': mean },
+        success: function (response) {
+          if (response['result'] == 'success') {
+            // console.log($('#num').val(''));
+            alert(response['msg']);
+            $('#num').val('');
+            $('#ID').val('');
+            $('#newName').val('');
+            $('#mean').val('');
+            name_listing();
+            $('.form-post').hide();
+            // window.location.reload();
+          }
+        }
+      });
+    }
+
+    $(document).ready(function () {
+      $('#orders-box').html('');
+      // name_listing();
+    });
+
+    function name_listing() {
+      //alert('name_listing');
+      $('#orders-box').empty();
+      $.ajax({
+        type: "GET",
+        url: "/naming_list",
+        data: {},
+        success: function (response) {
+          if (response['result'] == 'success') {
+            let naming_list = response['naming_list'];
+            // console.log(naming_list);
+            let num2 = $('#num2').val();
+            
+
+            for (let i = 0; i < naming_list.length; i++) {
+              // console.log(naming_list[i]['공고번호']);
+              if (naming_list[i]['공고번호'] == $('#num2').val()) {
+                list_card(naming_list[i]['ID'], naming_list[i]['newName'], naming_list[i]['mean'], naming_list[i]['like']);
               }
             }
-          });
+
+          } else {
+            alert('이름 조회 오류');
+          }
         }
+      })
+    }
 
-        $(document).ready(function () {
-            $('#orders-box').html('');
-            // name_listing();
-        });
-        
-        function name_listing() {
-          //alert('name_listing');
-          $('#orders-box').empty();
-            $.ajax({
-                type: "GET",
-                url: "/naming_list",
-                data: {},
-                success: function (response) {
-                    if (response['result'] == 'success') {
-                        let naming_list = response['naming_list'];
-                        // console.log(naming_list);
-                        let num2 = $('#num2').val();
-
-                        for (let i = 0; i < naming_list.length; i++) {
-                          // console.log(naming_list[i]['공고번호']);
-                         if(naming_list[i]['공고번호'] ==  $('#num2').val()) {
-                          list_card(naming_list[i]['ID'], naming_list[i]['newName'], naming_list[i]['mean'], naming_list[i]['like']);
-                          }
-                        }
-
-                    } else {
-                        alert('리뷰를 받아오지 못했습니다');
-                    }
-                }
-            })
-        }
-
-        function list_card(ID, newName, mean,like) {
-          var id = "'"+ID+"'";
-            let temp_html = '<tr>\
+    function list_card(ID, newName, mean, like) {
+      var id = "'" + ID + "'";
+      let temp_html = '<tr>\
                                 <td>'+ ID + '</td>\
                                 <td>'+ newName + '</td>\
                                 <td>'+ mean + '</td>\
                                 <td>'+ like + '</td>\
-                                <td>'+'<input type="button" onclick="like('+id+')" value="좋아요"/>'+ '</td>\
+                                <td>'+ '<input type="button" onclick="like(' + id + ')" value="좋아요"/>' + '</td>\
                             </tr>';
-            $('#orders-box').append(temp_html);
-        }
+      $('#orders-box').append(temp_html);
+    }
 
 
-//이름 없는 동물 랜덤//
+    //이름 없는 동물 랜덤//
 
-        function random_A(){
-        $('#cards-box2').empty();
-        $.ajax({
-          type: "GET",
-          url: "/need_naming",
-          data: {},
-          success: function (response) {
-            if (response['result'] == 'success') {
+    function random_A() {
+      $('#cards-box2').empty();
+      $.ajax({
+        type: "GET",
+        url: "/need_naming",
+        data: {},
+        success: function (response) {
+          if (response['result'] == 'success') {
 
 
-           
+
             let random_A = response['NoName_A']
 
-            random_card(random_A['img_url'],random_A['이름'],
-            random_A['공고번호'],random_A['접수일자'],random_A['품종'],random_A['성별'],
-            random_A['발견장소'],random_A['특징'],random_A['상태']);
-            
+            random_card(random_A['img_url'], random_A['이름'],
+              random_A['공고번호'], random_A['접수일자'], random_A['품종'], random_A['성별'],
+              random_A['발견장소'], random_A['특징'], random_A['상태']);
+
             $('#num2').val(random_A['공고번호']);
-            } else {
-                    alert('동물 조회에 실패했습니다.');
-                }
+            $('#num').val(random_A['공고번호']);
+            
+          } else {
+            alert('동물 조회에 실패했습니다.');
           }
-        });
         }
-                   
+      });
+    }
 
-        function random_card(img_url, 이름, 공고번호, 접수일자, 품종, 성별, 발견장소, 특징, 상태,) {
-            let R_temp_html = '<div class="card" id="cards-box2" ><img class="card-img-top" src="'+ img_url + '" alt="Card image cap">\
+
+    function random_card(img_url, 이름, 공고번호, 접수일자, 품종, 성별, 발견장소, 특징, 상태, ) {
+      $('#cards-box2').empty();
+      let R_temp_html = '<div class="card" id="cards-box2" ><img class="card-img-top" src="' + img_url + '" alt="Card image cap">\
         <div class="card-body">\
-          <a href="' +  + '" class="name">' + 이름 + '</a>\
+          <a href="' + + '" class="name">' + 이름 + '</a>\
           <p class="number"> '+ '공고번호&nbsp&nbsp : &nbsp' + 공고번호 + '</p>\
-             <p class="day"> '+ '접수일자&nbsp&nbsp : &nbsp'+ 접수일자 + '</p>\
-             <p class="kind"> '+ '&nbsp&nbsp품종&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 품종 + '</p>\
-             <p class="gender"> '+ '&nbsp&nbsp성별&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 성별 + '</p>\
-             <p class="find"> '+ '발견장소&nbsp&nbsp : &nbsp'+ 발견장소 + '</p>\
-             <p class="character"> '+ '&nbsp&nbsp특징&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 특징 + '</p>\
-          <p class="care"> '+ '&nbsp&nbsp상태&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 상태 + '</p>\
+             <p class="day"> '+ '접수일자&nbsp&nbsp : &nbsp' + 접수일자 + '</p>\
+             <p class="kind"> '+ '&nbsp&nbsp품종&nbsp&nbsp&nbsp&nbsp : &nbsp' + 품종 + '</p>\
+             <p class="gender"> '+ '&nbsp&nbsp성별&nbsp&nbsp&nbsp&nbsp : &nbsp' + 성별 + '</p>\
+             <p class="find"> '+ '발견장소&nbsp&nbsp : &nbsp' + 발견장소 + '</p>\
+             <p class="character"> '+ '&nbsp&nbsp특징&nbsp&nbsp&nbsp&nbsp : &nbsp' + 특징 + '</p>\
+          <p class="care"> '+ '&nbsp&nbsp상태&nbsp&nbsp&nbsp&nbsp : &nbsp' + 상태 + '</p>\
       </div></div>';
-            $('#random_card').append(R_temp_html);
+      $('#cards-box2').append(R_temp_html);
+      name_listing()
+    }
+
+    //좋아요//
+    function like(IDval) {
+      // console.log("like()");
+
+      let ID = IDval;
+      // console.log(ID);
+      $.ajax({
+        type: "POST",
+        url: "/like",
+        data: { 'ID_give': ID },
+        success: function (response) {
+          if (response['result'] == 'success') {
+            name_listing()
+
+            // alert(response['msg']);
+
+            // window.location.reload();
+          }
         }
+      });
 
-//좋아요//
-function like(IDval){
-  console.log("like()");
-  
-  let ID = IDval;
-  console.log(ID);
-    $.ajax({
-      type: "POST",
-      url: "/like",
-      data: { 'ID_give': ID},
-      success: function (response) {
-        if (response['result'] == 'success') {
+    }
 
-          alert(response['msg']);
-          
-          // window.location.reload();
-        }
-      }
-          });
+    // 동물조회하기//
 
-}
-
-// 동물조회하기//
-
-$(document).ready(function () {
+    $(document).ready(function () {
       $('#cards-box').html('');
       listing();
     });
 
-        function listing() {
-        $('#cards-box').empty();
+    function listing() {
+      $('#cards-box').empty();
 
-        $.ajax({
-            type: "GET",
-            url: "/animal_ko",
-            data: {},
-            success: function (response) {
-                if (response['result'] == 'success') {
+      $.ajax({
+        type: "GET",
+        url: "/animal_ko",
+        data: {},
+        success: function (response) {
+          if (response['result'] == 'success') {
 
-                  //  console.log(response['animal_list'])
+            //  console.log(response['animal_list'])
 
-                    let showCards = response['animal_list']
+            let showCards = response['animal_list']
 
-                    for (let i=0; i<6; i++){
+            for (let i = 0; i < showCards.length; i++) {
 
-                      // console.log(showCards)
-                      make_card(showCards[i]['img_url'],showCards[i]['이름'],
-                      showCards[i]['공고번호'],showCards[i]['접수일자'],showCards[i]['품종'],showCards[i]['성별'],
-                      showCards[i]['발견장소'],showCards[i]['특징'],showCards[i]['상태']);
-                    }
-                } else {
-                    alert('동물 조회에 실패했습니다.');
-                }
+              // console.log(showCards)
+              make_card(showCards[i]['img_url'], showCards[i]['이름'],
+                showCards[i]['공고번호'], showCards[i]['접수일자'], showCards[i]['품종'], showCards[i]['성별'],
+                showCards[i]['발견장소'], showCards[i]['특징'], showCards[i]['상태']);
             }
-        })
+          } else {
+            alert('동물 조회에 실패했습니다.');
+          }
+        }
+      })
     }
 
-        function make_card(img_url, 이름, 공고번호, 접수일자, 품종, 성별, 발견장소, 특징, 상태,) {
-            let temp_html = '<div class="card">\
+    function make_card(img_url, 이름, 공고번호, 접수일자, 품종, 성별, 발견장소, 특징, 상태, ) {
+      let temp_html = '<div class="card">\
         <img class="card-img-top" src="'+ img_url + '" alt="Card image cap">\
         <div class="card-body">\
-          <a href="' +  + '" class="name">' + 이름 + '</a>\
+          <a href="' + + '" class="name">' + 이름 + '</a>\
           <p class="number"> '+ '공고번호&nbsp&nbsp : &nbsp' + 공고번호 + '</p>\
-             <p class="day"> '+ '접수일자&nbsp&nbsp : &nbsp'+ 접수일자 + '</p>\
-             <p class="kind"> '+ '&nbsp&nbsp품종&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 품종 + '</p>\
-             <p class="gender"> '+ '&nbsp&nbsp성별&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 성별 + '</p>\
-             <p class="find"> '+ '발견장소&nbsp&nbsp : &nbsp'+ 발견장소 + '</p>\
-             <p class="character"> '+ '&nbsp&nbsp특징&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 특징 + '</p>\
-          <p class="care"> '+ '&nbsp&nbsp상태&nbsp&nbsp&nbsp&nbsp : &nbsp'+ 상태 + '</p>\
+             <p class="day"> '+ '접수일자&nbsp&nbsp : &nbsp' + 접수일자 + '</p>\
+             <p class="kind"> '+ '&nbsp&nbsp품종&nbsp&nbsp&nbsp&nbsp : &nbsp' + 품종 + '</p>\
+             <p class="gender"> '+ '&nbsp&nbsp성별&nbsp&nbsp&nbsp&nbsp : &nbsp' + 성별 + '</p>\
+             <p class="find"> '+ '발견장소&nbsp&nbsp : &nbsp' + 발견장소 + '</p>\
+             <p class="character"> '+ '&nbsp&nbsp특징&nbsp&nbsp&nbsp&nbsp : &nbsp' + 특징 + '</p>\
+          <p class="care"> '+ '&nbsp&nbsp상태&nbsp&nbsp&nbsp&nbsp : &nbsp' + 상태 + '</p>\
         </div>\
       </div>';
-            $('#cards-box').append(temp_html);
-        }
+      $('#cards-box').append(temp_html);
+    }
 
-      </script>
-    
-      <!-- style -->
-      <style typez="text/css">
-        * {
-          font-family: 'Stylish', sans-serif;
+    function next_listing() {
+      $('#cards-box').empty();
+
+      $.ajax({
+        type: "GET",
+        url: "/animal_ko",
+        data: {},
+        success: function (response) {
+          if (response['result'] == 'success') {
+
+            //  console.log(response['animal_list'])
+
+            let showCards = response['animal_list']
+            let i =5; 
+            let j = i+6
+            for (i ; i < j; i++) {
+
+              // console.log(showCards)
+
+              make_card(showCards[i]['img_url'], showCards[i]['이름'],
+                showCards[i]['공고번호'], showCards[i]['접수일자'], showCards[i]['품종'], showCards[i]['성별'],
+                showCards[i]['발견장소'], showCards[i]['특징'], showCards[i]['상태']);
+                
+                if(showCards ==''){
+                  alert('마지막 정보입니다.');
+                }
+            }
+          } else {
+            alert('동물 조회에 실패했습니다.');
+          }
         }
-        
-        .form-post {
-          max-width: 500px;
-          /* max-height: 500px; */
-          padding: 2rem;
-          margin: 2rem auto;
-          border-color: #e9ecef;
-          border-radius: 0.3rem;
-          border: solid;
-          display: block;
-        }
-        /* #cards-box {
+      })
+    }
+  </script>
+
+  <!-- style -->
+  <style typez="text/css">
+    * {
+      font-family: 'Stylish', sans-serif;
+    }
+
+    .form-post {
+      max-width: 500px;
+      /* max-height: 500px; */
+      padding: 2rem;
+      margin: 2rem auto;
+      border-color: #e9ecef;
+      border-radius: 0.3rem;
+      border: solid;
+      display: block;
+     
+    }
+
+    .post-box {
           display: none;
-        } */
-
-        .test_class{
-            max-width: 100%;
-            max-height: 100%;
-            overflow: hidden;
         }
 
-
-        body, html {margin: 0; padding: 0; height: 100%;}
-
-        /* 메뉴바 */
-        header{
-         height: 75px; background-color:#197688; border: 1px solid #253342;
-         position: fixed; width:100%; z-index:9999; top: 0; left: 0;
-        }
-        .wrapper{width: 1170px; margin: 0 auto;}
-        .wrapper h1{color: white; line-height: 75px; float: left;}
-        .menu{float: right;}
-        .menu li{float: left; display: block;}
-        .menu li a{line-height: 75px; color: white; padding: 0 15px; display: block;}
-       
-       
-       /* 메인페이지 */
-        .main{
-            min-width: 100%;
-            min-height: 100%;
-           }
-           
-        .background_img{
-           border: 0;
-           padding: 0; 
-           background-position: center;
-           background-size: cover;
-           }
-
-       .wrap {
-          width: 900px;
-          margin: auto;
-        }
-        .wrap2 {
-          width: 1200px;
-          margin: auto;
-        }
-        
-        #random_card{
-          width: 1200px;
-          display: inline-block;
-          margin: auto;
-        }
-
-        .freename_list{
-          width: 700px;
-          display: inline-block;
-          padding-left: 100px;
-          margin: auto;
-          border-color: #e9ecef;
-          border-radius: 0.3rem;
-          text-align: center;
+    .test_class {
+      max-width: 100%;
+      max-height: 100%;
+      overflow: hidden;
+    }
 
 
-        }
-        #cards-box2{
-          float: left;
-          width: 400px;
-          display: inline-block;
-        }
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    /* 메뉴바 */
+    header {
+      height: 75px;
+      background-color: #197688;
+      border: 1px solid #253342;
+      position: fixed;
+      width: 100%;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+    }
+
+    .wrapper {
+      width: 1170px;
+      margin: 0 auto;
+    }
+
+    .wrapper h1 {
+      color: white;
+      line-height: 75px;
+      float: left;
+    }
+
+    .menu {
+      float: right;
+    }
+
+    .menu li {
+      float: left;
+      display: block;
+    }
+
+    .menu li a {
+      line-height: 75px;
+      color: white;
+      padding: 0 15px;
+      display: block;
+    }
 
 
-      </style>
+    /* 메인페이지 */
+    .main {
+      min-width: 100%;
+      min-height: 100%;
+    }
+
+    .background_img {
+      border: 0;
+      padding: 0;
+      background-position: center;
+      background-size: cover;
+    }
+
+    .wrap {
+      width: 900px;
+      margin: auto;
+    }
+
+    .wrap2 {
+      width: 1200px;
+      margin: auto;
+    }
+
+    #random_card {
+      width: 1200px;
+      display: inline-block;
+      margin: auto;
+    }
+
+    .freename_list {
+      width: 700px;
+      display: inline-block;
+      padding-left: 100px;
+      margin: auto;
+      border-color: #e9ecef;
+      border-radius: 0.3rem;
+      text-align: center;
+
+
+    }
+
+    #cards-box2 {
+      float: left;
+      width: 400px;
+      display: inline-block;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <header>
+    <div class="wrapper">
+      <h1>유기동물 이름짓기</h1>
+      <nav>
+        <ul class="menu">
+          <li><a href="#">Home</a></li>
+          <li><a href="#wrap">동물 조회</a></li>
+          <li><a href="#wrap2">이름 짓기</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+
+  <div class="main">
+    <div style="position: absolute;">
+      <img src="{{ url_for('static', filename='img/main_text.png') }}"></img>
+    </div>
+    <img src="{{ url_for('static', filename='img/main.png') }}" class="background_img"></img>
+
+  </div>
+
+
+  <section>
     
-    </head>
-    <body>
-        
-        <header>
-          <div class="wrapper">
-            <h1>LOGO</h1>
-            <nav>
-              <ul class="menu">
-                <li><a href="#">Home</a></li>
-                <li><a href="">동물 조회</a></li>
-                <li><a href="">이름 짓기</a></li>
-              </ul>
-            </nav>
-          </div>
-        </header>
-
-
-            <div class =" main">
-                <div style="position: absolute;">
-                  <img src="C:\Users\girl\Desktop\sparta\animalproject\templates\img\main_text.png"></img>
-                </div>
-                <img src="C:\Users\girl\Desktop\sparta\animalproject\templates\img\main.png"class = "background_img"></img>
-            
-            </div>
-
-
-    <section>
-      <div class="wrap">
-        <div class="menu_1">
-          <h1 style="text-align: center;">동물 조회</h1>
-          <hr>
-          
-        </div>
-        <div class="card-columns"  id="cards-box">
-          <div class="card">
-            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
-            <div class="card-body">
-              <a href="#" class="name">이름</a>
-              <p class="number">공고번호</p>
-              <p class="day">접수일자 </p>
-              <p class="kind">품종</p>
-              <p class="gender">성별</p>
-              <p class="find">발견장소</p>
-              <p class="character">특징</p>
-              <p class="care">상태</p>
-            </div>
-          </div>
-          <div class="card">
-            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
-            <div class="card-body">
-              <h5 class="name">이름</h5>
-              <p class="number">공고번호</p>
-              <p class="day">접수일자 </p>
-              <p class="kind">품종</p>
-              <p class="gender">성별</p>
-              <p class="find">발견장소</p>
-              <p class="character">특징</p>
-              <p class="care">상태</p>
-            </div>
-          </div>
-          <div class="card">
-            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
-            <div class="card-body">
-              <h5 class="name">이름</h5>
-              <p class="number">공고번호</p>
-              <p class="day">접수일자 </p>
-              <p class="kind">품종</p>
-              <p class="gender">성별</p>
-              <p class="find">발견장소</p>
-              <p class="character">특징</p>
-              <p class="care">상태</p>
-            </div>
-          </div>
-          <div class="card">
-            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
-            <div class="card-body">
-              <h5 class="name">이름</h5>
-              <p class="number">공고번호</p>
-              <p class="day">접수일자 </p>
-              <p class="kind">품종</p>
-              <p class="gender">성별</p>
-              <p class="find">발견장소</p>
-              <p class="character">특징</p>
-              <p class="care">상태</p>
-            </div>
-          </div>
-          <div class="card">
-            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
-            <div class="card-body">
-              <h5 class="name">이름</h5>
-              <p class="number">공고번호</p>
-              <p class="day">접수일자 </p>
-              <p class="kind">품종</p>
-              <p class="gender">성별</p>
-              <p class="find">발견장소</p>
-              <p class="character">특징</p>
-              <p class="care">상태</p>
-            </div>
-          </div>
-          <div class="card">
-            <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
-            <div class="card-body">
-              <h5 class="name">이름</h5>
-              <p class="number">공고번호</p>
-              <p class="day">접수일자 </p>
-              <p class="kind">품종</p>
-              <p class="gender">성별</p>
-              <p class="find">발견장소</p>
-              <p class="character">특징</p>
-              <p class="care">상태</p>
-            </div>
-          </div>
-        </div>
+    <div class="wrap" id="wrap">
+      <div class="menu_1">
+        <h1 style="text-align: center; padding-top: 150px; padding-bottom: 50px;">동물 조회</h1>
+        <hr>
+        <!-- <button onclick="next_listing()" class="btn btn-primary">다음</button> -->
       </div>
-    </section>
-    <section>
-  <hr><hr><hr><hr>
-   
-  <div class="wrap2">
-    <button onclick="random_A()" class="btn btn-primary">랜덤 테스트</button>
-    <div id="random_card">
-    <h1>아이의 이름을 지어주세요</h1>    
-    <div class="freename_list" > 
-      <input type="hidden" id="num2" value=""/>
-      
-        <table class="table" >
-            <thead>
-                <tr>
-                    <th class="meta_info" scope="col">닉네임</th>
-                    <th class="meta_info" scope="col">이름</th>
-                    <th scope="col">이름 설명</th>
-                    <th class="meta_info" scope="col">좋아요</th>
-                    <th class="meta_info"></th>
-                </tr>
-            </thead>
-            <tbody id="orders-box">   
-                <tr>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                </tr>
-            </tbody>
-        </table>
-    
+      <div class="card-columns" id="cards-box">
+        <div class="card">
+          <img class="card-img-top"
+            src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+            alt="Card image cap">
+          <div class="card-body">
+            <a href="#" class="name">이름</a>
+            <p class="number">공고번호</p>
+            <p class="day">접수일자 </p>
+            <p class="kind">품종</p>
+            <p class="gender">성별</p>
+            <p class="find">발견장소</p>
+            <p class="character">특징</p>
+            <p class="care">상태</p>
+          </div>
+        </div>
+        <div class="card">
+          <img class="card-img-top"
+            src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+            alt="Card image cap">
+          <div class="card-body">
+            <h5 class="name">이름</h5>
+            <p class="number">공고번호</p>
+            <p class="day">접수일자 </p>
+            <p class="kind">품종</p>
+            <p class="gender">성별</p>
+            <p class="find">발견장소</p>
+            <p class="character">특징</p>
+            <p class="care">상태</p>
+          </div>
+        </div>
+        <div class="card">
+          <img class="card-img-top"
+            src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+            alt="Card image cap">
+          <div class="card-body">
+            <h5 class="name">이름</h5>
+            <p class="number">공고번호</p>
+            <p class="day">접수일자 </p>
+            <p class="kind">품종</p>
+            <p class="gender">성별</p>
+            <p class="find">발견장소</p>
+            <p class="character">특징</p>
+            <p class="care">상태</p>
+          </div>
+        </div>
+        <div class="card">
+          <img class="card-img-top"
+            src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+            alt="Card image cap">
+          <div class="card-body">
+            <h5 class="name">이름</h5>
+            <p class="number">공고번호</p>
+            <p class="day">접수일자 </p>
+            <p class="kind">품종</p>
+            <p class="gender">성별</p>
+            <p class="find">발견장소</p>
+            <p class="character">특징</p>
+            <p class="care">상태</p>
+          </div>
+        </div>
+        <div class="card">
+          <img class="card-img-top"
+            src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+            alt="Card image cap">
+          <div class="card-body">
+            <h5 class="name">이름</h5>
+            <p class="number">공고번호</p>
+            <p class="day">접수일자 </p>
+            <p class="kind">품종</p>
+            <p class="gender">성별</p>
+            <p class="find">발견장소</p>
+            <p class="character">특징</p>
+            <p class="care">상태</p>
+          </div>
+        </div>
+        <div class="card">
+          <img class="card-img-top"
+            src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+            alt="Card image cap">
+          <div class="card-body">
+            <h5 class="name">이름</h5>
+            <p class="number">공고번호</p>
+            <p class="day">접수일자 </p>
+            <p class="kind">품종</p>
+            <p class="gender">성별</p>
+            <p class="find">발견장소</p>
+            <p class="character">특징</p>
+            <p class="care">상태</p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-      <div class='form-post'>
-            <div class="info">
-                <p>아이가 좋은 이름을 갖고 입양될 수 있도록 센스를 보여주세요!</p>
-            </div>
-            <div class="info">
-              
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">공고번호</span>
-                </div>
-                <input type="text" class="form-control" id="num" aria-describedby="basic-addon3" readonly>
-            </div>  
-              <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">닉네임</span>
-                    </div>
-                    <input type="text" class="form-control" id="ID" aria-describedby="basic-addon3">
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">이름</span>
-                    </div>
-                    <input type="text" class="form-control" id="newName" aria-describedby="basic-addon3">
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">이름 설명</span>
-                    </div>
-                    <textarea class="form-control" aria-describedby="basic-addon3" name="bookReview" id="mean" cols="30"
-                        rows="5" placeholder="140자까지 입력할 수 있습니다." maxlength="50">
-                    </textarea>
-                </div>
-                <div class="order">
-                  <button onclick="naming()" class="btn btn-primary">!이름짓기완료!</button>
-                </div>
-            </div>
-          </div>
+  </section>
+  <section>
+    <hr>
+  
 
-    </section>
-    </body>
-    </html>
+    <div class="wrap2" id="wrap2">
+      <h1 style="text-align: center; padding-top: 150px; padding-bottom: 50px;">이름 짓기</h1>
+      <hr>
+      
+      <h4 style="padding: 15px; display: inline-block; padding-right: 100px ; padding-left: 100px ;">아이의 이름을 지어주세요</h4>
+      <h4 style="padding: 15px; display: inline-block; padding-right: 250px ; padding-left: 240px ;">마음에 드는 이름을 추천해주세요</h4>
+      <div id="random_card">
+        <div id='cards-box2'></div>
+        <div class="freename_list">
+          <input type="hidden" id="num2" value="" />
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="meta_info" scope="col">닉네임</th>
+                <th class="meta_info" scope="col">이름</th>
+                <th scope="col">이름 설명</th>
+                <th class="meta_info" scope="col">좋아요</th>
+                <th class="meta_info"></th>
+              </tr>
+            </thead>
+            <tbody id="orders-box">
+              <tr>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+      <button onclick="random_A()" class="btn btn-primary" style="margin: 10px 30px 10px 50px;">다른 동물 보기</button>
+      <button onclick="nameform()" class="btn btn-primary" style="margin: 10px 40px 10px 30px;">이름 짓기</button>
+      <div class="post-box">
+      <div class='form-post'>
+        <div class="info">
+          <p>아이가 좋은 이름을 갖고 입양될 수 있도록 센스를 보여주세요!</p>
+        </div>
+        <div class="info">
+
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">공고번호</span>
+            </div>
+            <input type="text" class="form-control" id="num" aria-describedby="basic-addon3" readonly>
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">닉네임</span>
+            </div>
+            <input type="text" class="form-control" id="ID" aria-describedby="basic-addon3">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">이름</span>
+            </div>
+            <input type="text" class="form-control" id="newName" aria-describedby="basic-addon3">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">이름 설명</span>
+            </div>
+            <textarea class="form-control" aria-describedby="basic-addon3" name="bookReview" id="mean" cols="30"
+              rows="5" placeholder="140자까지 입력할 수 있습니다." maxlength="50">
+                    </textarea>
+          </div>
+          <div class="order">
+            <button onclick="naming()" class="btn btn-primary">!이름짓기완료!</button>
+          </div>
+        </div>
+      </div></div>
+
+  </section>
+</body>
+
+</html>
